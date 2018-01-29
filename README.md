@@ -29,42 +29,45 @@ webpack.config.js
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const merge = require('webpack-merge');
-const parts  = require('./webpack.parts');
+const parts = require('./webpack.parts');
 
 const PATHS = {
-    app: path.join(__dirname, 'src'),
-    build: path.join(__dirname, 'build')
+  app: path.join(__dirname, 'src'),
+  build: path.join(__dirname, 'build'),
 };
 
-const commonConfig = {
+const commonConfig = merge([
+  {
     entry: {
-        app: PATHS.app,
+      app: PATHS.app,
     },
     output: {
-        path: PATHS.build,
-        filename: '[name].js',
+      path: PATHS.build,
+      filename: '[name].js',
     },
     plugins: [
-        new HtmlWebpackPlugin({
-            title: 'Webpack demo',
-        }),
+      new HtmlWebpackPlugin({
+        title: 'Webpack demo',
+      }),
     ],
-};
+  },
+]);
 
-const productionConfig = () => merge([]);
+const productionConfig = merge([
+]);
 
-const developmentConfig = () => merge([
-    parts.devServer({
-        host: process.env.HOST,
-        port: process.env.PORT,
-    }),
+const developmentConfig = merge([
+  parts.devServer({
+    host: process.env.HOST,
+    port: process.env.PORT,
+  }),
 ]);
 
 module.exports = (env) => {
-    if (env === 'production') {
-        return merge([commonConfig, productionConfig]);
-    }
-    return merge([commonConfig, developmentConfig]);
+  if (env === 'production') {
+    return merge(commonConfig, productionConfig);
+  }
+  return merge(commonConfig, developmentConfig);
 };
 ```
 
@@ -105,24 +108,36 @@ The eslint --init will helps to create a .eslintrc file with the rules you choos
 
 ```
 $ npm i eslint -D
+$ touch .eslintignore
 $ ./node_modules/.bin/eslint --init
-$ npm i eslint-loader -D
 ```
 
-webpack.parts.js
+package.json
 ```javascript
-exports.lintJavaScript = ({ include, exclude, options }) => ({
-  module: {
-    rules: [
-      {
-        test: /\.js$/,
-        exclude: /node_modules/,
-        loader: 'eslint-loader',
-        options: {
-          // emitWarning: true
-        }
-      }
-    ]
-  }
-});
+"scripts": {
+  "lint": "eslint . --ext .js --ext .jsx"
+}
+```
+
+.eslintignore
+```
+build
+node_modules
+```
+
+.eslintrc
+```javascript
+{
+    "extends": "airbnb",
+    "env": {
+        "browser": true,
+        "node": true
+    }
+}
+```
+
+## Styling
+
+```
+$ npm i css-loader style-loader -D
 ```

@@ -6,6 +6,7 @@
   "scripts": {
     "start": "webpack-dev-server --env development",
     "build": "webpack --env production",
+    "lint": "eslint . --ext .js --ext .jsx",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
