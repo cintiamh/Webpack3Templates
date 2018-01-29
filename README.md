@@ -25,11 +25,13 @@ $ touch webpack.config.js
 In package.json include:
 ```javascript
 "scripts": {
-    "build": "webpack",
-},
+    "start": "webpack-dev-server --env development",
+    "build": "webpack --env production"
+}
 ```
 
 Now you can run:
 ```
+$ npm start
 $ npm run build
 ```
