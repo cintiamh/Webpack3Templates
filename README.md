@@ -283,3 +283,92 @@ const productionConfig = merge([
   }),
 ]);
 ```
+
+## Loading images
+
+```
+$ npm i url-loader file-loader -D
+```
+
+* `url-loader`: inline images (smaller)
+* `file-loader`: skip inlining (bigger)
+
+webpack.parts.js
+```javascript
+exports.loadImages = ({ include, exclude, options } = {}) => ({
+  module: {
+    rules: [
+      {
+        test: /\.(jpg|png|svg)$/,
+        include,
+        exclude,
+        use: {
+          loader: 'url-loader',
+          options,
+        },
+      },
+    ],
+  },
+});
+```
+
+webpack.config.js
+```javascript
+const productionConfig = merge([
+  // ...
+  parts.loadImages({
+    options: {
+      limit: 15000,
+      name: '[name].[ext]',
+    },
+  }),
+]);
+
+const developmentConfig = merge([
+  parts.devServer({
+    host: process.env.HOST,
+    port: process.env.PORT,
+  }),
+  parts.loadCSS(),
+  parts.loadImages(),
+]);
+```
+
+## Loading Fonts
+
+Just like with images:
+```
+$ npm i url-loader file-loader -D
+```
+
+webpack.parts.js
+```javascript
+exports.loadFonts = ({ include, exclude, options } = {}) => ({
+  module: {
+    rules: [
+      {
+        // Capture eot, ttf, woff, and woff2
+        test: /\.(eot|ttf|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+        include,
+        exclude,
+        use: {
+          loader: 'file-loader',
+          options,
+        },
+      },
+    ],
+  },
+});
+```
+
+webpack.config.js
+```javascript
+const commonConfig = merge([
+  // ...
+  parts.loadFonts({
+    options: {
+      name: '[name].[ext]',
+    }
+  }),
+]);
+```
