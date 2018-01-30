@@ -419,3 +419,88 @@ const commonConfig = merge([
   ]
 }
 ```
+
+## Source maps
+
+webpack.parts.js
+```javascript
+exports.generateSourceMaps = ({ type }) => ({
+  devtool: type,
+});
+```
+
+* `eval-source-map` for development.
+* `source-map` for production.
+
+webpack.config.js
+```javascript
+const productionConfig = () => merge([
+  parts.generateSourceMaps({ type: 'source-map' }),
+  // ...
+]);
+
+const developmentConfig = () => merge([
+  {
+    output: {
+      devtoolModuleFilenameTemplate: 'webpack:///[absolute-resource-path]',
+    },
+  },
+  parts.generateSourceMaps({ type: 'cheap-module-eval-source-map' }),
+  // ...
+]);
+``` 
+
+## Bundle Splitting
+
+webpack.parts.js
+```javascript
+const webpack = require('webpack');
+
+exports.extractBundles = (bundles) => ({
+  plugins: bundles.map((bundle) => (
+    new webpack.optimize.CommonsChunkPlugin(bundle)
+  )),
+});
+```
+
+webpack.config.js
+```javascript
+const productionConfig = () => merge([
+  {
+    entry: {
+      vendor: ['react', 'react-dom'],
+    },
+  },
+  // ...
+  parts.extractBundles([
+    {
+      name: 'vendor'
+    },
+  ]),
+]);
+```
+
+## Tyiding up
+
+```
+$ npm i clean-webpack-plugin -D
+```
+
+webpack.parts.js
+```javascript
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+exports.clean = (path) => ({
+  plugins: [
+    new CleanWebpackPlugin([path]),
+  ],
+});
+```
+
+webpack.config.js
+```javascript
+const productionConfig = () => merge([
+  parts.clean(PATHS.build),
+  // ...
+]);
+```

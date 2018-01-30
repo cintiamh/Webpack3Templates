@@ -1,5 +1,19 @@
 const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const PurifyCSSPlugin = require('purifycss-webpack');
+const webpack = require('webpack');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+exports.clean = (path) => ({
+  plugins: [
+    new CleanWebpackPlugin([path]),
+  ],
+});
+
+exports.extractBundles = (bundles) => ({
+  plugins: bundles.map((bundle) => (
+    new webpack.optimize.CommonsChunkPlugin(bundle)
+  )),
+});
 
 exports.purifyCSS = ({ paths }) => ({
   plugins: [
@@ -114,4 +128,8 @@ exports.loadJavaScript = ({ include, exclude }) => ({
       },
     ],
   },
+});
+
+exports.generateSourceMaps = ({ type }) => ({
+  devtool: type,
 });
