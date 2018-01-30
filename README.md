@@ -372,3 +372,54 @@ const commonConfig = merge([
   }),
 ]);
 ```
+
+## Loading JavaScript
+
+```
+$ npm i babel-loader babel-core babel-preset-env -D
+$ touch .babelrc
+```
+
+webpack.parts.js
+```javascript
+exports.loadJavaScript = ({ include, exclude }) => ({
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        include,
+        exclude,
+        loader: 'babel-loader',
+        options: {
+          cacheDirectory: true,
+        },
+      },
+    ],
+  },
+});
+```
+
+webpack.config.js
+```javascript
+const commonConfig = merge([
+  // ...
+  parts.loadJavaScript({ include: PATHS.app }),
+]);
+```
+
+.babelrc
+```javascript
+{
+  "presets": [
+    [
+      "env",
+      {
+        "modules": false,
+        "targets": {
+          "browsers": ["last 2 Chrome versions"]
+        }
+      }
+    ]
+  ]
+}
+```

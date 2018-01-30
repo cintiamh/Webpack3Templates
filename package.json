@@ -22,6 +22,9 @@
   "homepage": "https://github.com/cintiamh/Webpack3Templates#readme",
   "devDependencies": {
     "autoprefixer": "^7.2.5",
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.1",
     "css-loader": "^0.28.9",
     "eslint": "^4.16.0",
     "eslint-config-airbnb": "^16.1.0",
