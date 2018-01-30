@@ -377,6 +377,7 @@ const commonConfig = merge([
 
 ```
 $ npm i babel-loader babel-core babel-preset-env -D
+$ npm i babel-plugin-transform-object-assign babel-plugin-transform-object-rest-spread babel-plugin-transform-runtime -D
 $ touch .babelrc
 ```
 
@@ -410,16 +411,11 @@ const commonConfig = merge([
 .babelrc
 ```javascript
 {
-  "presets": [
-    [
-      "env",
-      {
-        "modules": false,
-        "targets": {
-          "browsers": ["last 2 Chrome versions"]
-        }
-      }
-    ]
+  "presets": ["env"],
+  "plugins": [
+    "transform-object-rest-spread" ,
+    "transform-object-assign",
+    "transform-runtime"
   ]
 }
 ```
