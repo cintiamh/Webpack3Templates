@@ -140,4 +140,96 @@ node_modules
 
 ```
 $ npm i css-loader style-loader -D
+$ touch src/main.css
+```
+
+webpack.parts.js
+```javascript
+exports.loadCSS = ({ include, exclude } = {}) => ({
+  module: {
+    rules: [
+      {
+        test: /\.css$/,
+        include,
+        exclude,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
+  },
+});
+```
+
+webpack.config.js
+```javascript
+const developmentConfig = merge([
+  // ...
+  parts.loadCSS(),
+]);
+```
+
+### Loading Sass
+
+```
+$ npm i node-sass sass-loader -D 
+```
+
+webpack.parts.js
+```javascript
+{
+  test: /\.scss$/,
+  use: ['style-loader', 'css-loader', 'sass-loader'],
+}
+```
+
+### Loading from node_modules directory
+
+```css
+@import "~bootstrap/less/bootstrap";
+```
+
+### Extract CSS
+
+```
+$ npm i extract-text-webpack-plugin -D
+```
+
+webpack.parts.js
+```javascript
+const ExtractTextPlugin = require('extract-text-webpack-plugin');
+// ...
+exports.extractCSS = ({ include, exclude, use }) => {
+  // Output extracted CSS to a file
+  const plugin = new ExtractTextPlugin({
+    filename: '[name].css',
+  });
+  return {
+    module: {
+      rules: [
+        {
+          test: /\.css$/,
+          include,
+          exclude,
+          use: plugin.extract({
+            use,
+            fallback: 'style-loader',
+          }),
+        },
+      ],
+    },
+    plugins: [plugin],
+  };
+};
+```
+
+webpack.config.js
+```javascript
+const productionConfig = () => merge([
+  parts.extractCSS({ use: 'css-loader' }),
+]);
+```
+
+### Autoprefixing
+
+```
+$ npm i postcss-loader autoprefixer -D
 ```

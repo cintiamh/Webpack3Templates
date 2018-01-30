@@ -21,13 +21,16 @@
   },
   "homepage": "https://github.com/cintiamh/Webpack3Templates#readme",
   "devDependencies": {
+    "css-loader": "^0.28.9",
     "eslint": "^4.16.0",
     "eslint-config-airbnb": "^16.1.0",
     "eslint-loader": "^1.9.0",
     "eslint-plugin-import": "^2.8.0",
     "eslint-plugin-jsx-a11y": "^6.0.3",
     "eslint-plugin-react": "^7.6.0",
+    "extract-text-webpack-plugin": "^3.0.2",
     "html-webpack-plugin": "^2.30.1",
+    "style-loader": "^0.20.1",
     "webpack": "^3.10.0",
     "webpack-dev-server": "^2.11.1",
     "webpack-merge": "^4.1.1"
