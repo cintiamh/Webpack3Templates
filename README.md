@@ -233,3 +233,53 @@ const productionConfig = () => merge([
 ```
 $ npm i postcss-loader autoprefixer -D
 ```
+
+webpack.parts.js
+```javascript
+exports.autoprefix = () => ({
+  loader: 'postcss-loader',
+  options: {
+    plugins: () => ([
+      require('autoprefixer')(),
+    ]),
+  },
+});
+```
+
+webpack.config.js
+```javascript
+const productionConfig = () => merge([
+  parts.extractCSS({
+    use: ['css-loader', parts.autoprefix()],
+  }),
+]);
+```
+
+### Eliminating unused CSS
+
+```
+$ npm i glob purifycss-webpack purify-css -D
+```
+
+webpack.parts.js
+```javascript
+const PurifyCSSPlugin = require('purifycss-webpack');
+
+exports.purifyCSS = ({ paths }) => ({
+  plugins: [
+    new PurifyCSSPlugin({ paths }),
+  ],
+});
+```
+
+webpack.config.js
+```javascript
+const glob = require('glob');
+// ...
+const productionConfig = merge([
+  // This has to be AFTER extractCSS
+  parts.purifyCSS({
+    paths: glob.sync(`${PATHS.app}/**/*.js`, { nodir: true }),
+  }),
+]);
+```
