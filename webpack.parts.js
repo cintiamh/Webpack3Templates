@@ -2,6 +2,13 @@ const ExtractTextPlugin = require('extract-text-webpack-plugin');
 const PurifyCSSPlugin = require('purifycss-webpack');
 const webpack = require('webpack');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+exports.minifyJavaScript = () => ({
+  plugins: [
+    new UglifyJsPlugin()
+  ],
+});
 
 exports.clean = (path) => ({
   plugins: [
@@ -52,7 +59,7 @@ exports.extractCSS = ({ include, exclude, use } = {}) => {
   // Output extracted CSS to a file
   const plugin = new ExtractTextPlugin({
     allChunks: true,
-    filename: '[name].css',
+    filename: '[name].[contenthash:8].css',
   });
   return {
     module: {

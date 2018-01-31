@@ -504,3 +504,78 @@ const productionConfig = () => merge([
   // ...
 ]);
 ```
+
+## Minifying
+
+```
+$ npm i uglifyjs-webpack-plugin -D
+```
+
+webpack.parts.js
+```javascript
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
+
+exports.minifyJavaScript = () => ({
+  plugins: [
+    new UglifyJsPlugin()
+  ],
+});
+```
+
+webpack.config.js
+```javascript
+const productionConfig = () => merge([
+  // ...
+  parts.clean(PATHS.build),
+  parts.minifyJavaScript(),
+  // ...
+]);
+```
+
+## Adding Hashes to Filenames
+
+webpack.config.js
+```javascript
+const commonConfig = merge([
+  // ...
+  parts.loadFonts({
+    options: {
+      name: '[name].[hash:8].[ext]',
+    }
+  }),
+  // ...
+]);
+
+const productionConfig = () => merge([
+  {
+    performance: {
+      hints: "warning",
+      maxEntrypointSize: 50000,
+      maxAssetSize: 450000,
+    },
+    output: {
+      chunkFilename: "[name].[chunkhash:8].js",
+      filename: "[name].[chunkhash:8].js",
+    }
+  },
+  // ...
+  parts.loadImages({
+    options: {
+      limit: 15000,
+      name: '[name].[hash:8].[ext]',
+    },
+  }),
+  // ...
+]);
+```
+
+webpack.parts.js
+```javascript
+exports.extractCSS = ({ include, exclude, use }) => {
+  // Output extracted CSS to a file
+  const plugin = new ExtractTextPlugin({
+    filename: '[name].[contenthash:8].css',
+  });
+  // ...
+};
+```

@@ -26,14 +26,26 @@ const commonConfig = merge([
   },
   parts.loadFonts({
     options: {
-      name: '[name].[ext]',
+      name: '[name].[hash:8].[ext]',
     }
   }),
   parts.loadJavaScript({ include: PATHS.app }),
 ]);
 
 const productionConfig = merge([
+  {
+    performance: {
+      hints: "warning",
+      maxEntrypointSize: 50000,
+      maxAssetSize: 450000,
+    },
+    output: {
+      chunkFilename: "[name].[chunkhash:8].js",
+      filename: "[name].[chunkhash:8].js",
+    }
+  },
   parts.clean(PATHS.build),
+  parts.minifyJavaScript(),
   parts.generateSourceMaps({ type: 'source-map' }),
   parts.extractCSS({ use: ['css-loader', parts.autoprefix() ] }),
   parts.purifyCSS({
@@ -42,7 +54,7 @@ const productionConfig = merge([
   parts.loadImages({
     options: {
       limit: 15000,
-      name: '[name].[ext]',
+      name: '[name].[hash:8].[ext]',
     },
   }),
 ]);
