@@ -581,3 +581,25 @@ exports.extractCSS = ({ include, exclude, use }) => {
 ```
 
 ## Testing
+
+```
+$ npm i -D mocha chai sinon
+$ npm i -D karma karma-chai karma-mocha karma-webpack
+$ npm i -D puppeteer karma-chrome-launcher
+$ npm i -D karma-spec-reporter
+$ npm i -D babel-plugin-istanbul karma-coverage
+$ npm i -D yargs
+$ mkdir tests
+$ touch tests/cow.spec.js
+
+# optional
+$ ./node_modules/karma/bin/karma init karma.conf.js
+```
+
+package.json
+```json
+"scripts": {
+  "test": "karma start karma.conf.js",
+  "test:watch": "npm run test -- --watch"
+}
+```
