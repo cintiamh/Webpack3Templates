@@ -1,0 +1,18 @@
+{
+  "presets": ["env"],
+  "plugins": [
+    "transform-object-rest-spread" ,
+    "transform-object-assign",
+    "transform-runtime"
+  ],
+  "env": {
+    "karma": {
+      "plugins": [
+        [
+          "istanbul",
+          { "exclude": ["tests/**/*.spec.js"] }
+        ]
+      ]
+    }
+  }
+}
