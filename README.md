@@ -170,7 +170,7 @@ const developmentConfig = merge([
 ### Loading Sass
 
 ```
-$ npm i node-sass sass-loader -D 
+$ npm i node-sass sass-loader -D
 ```
 
 webpack.parts.js
@@ -448,7 +448,93 @@ const developmentConfig = () => merge([
   parts.generateSourceMaps({ type: 'cheap-module-eval-source-map' }),
   // ...
 ]);
-``` 
+```
+
+## React
+
+From: https://blog.hellojs.org/setting-up-your-react-es6-development-environment-with-webpack-express-and-babel-e2a53994ade
+
+```
+$ npm i -S react react-dom
+$ npm i -D babel-preset-react react-hot-loader
+$ npm i -D webpack-dev-middleware webpack-hot-middleware
+```
+
+.babelrc
+```json
+"scripts": {
+  "presets": ["env", "react"]
+}
+```
+
+## Express
+
+```
+$ npm i -S express
+$ touch src/server.js
+$ touch src/app.js
+```
+
+server.js
+```javascript
+const path = require('path')
+const express = require('express')
+
+module.exports = {
+  app: function () {
+    const app = express();
+    const indexPath = path.join(__dirname, 'indexDep.html');
+    const publicPath = express.static(path.join(__dirname, '../build'));
+
+    app.use('/build', publicPath);
+    app.get('/', function (_, res) { res.sendFile(indexPath) });
+
+    return app;
+  }
+}
+```
+
+app.js
+```javascript
+const Server = require('./server.js')
+const port = (process.env.PORT || 3000)
+const app = Server.app()
+
+if (process.env.NODE_ENV !== 'production') {
+  const webpack = require('webpack')
+  const webpackDevMiddleware = require('webpack-dev-middleware')
+  const webpackHotMiddleware = require('webpack-hot-middleware')
+  const config = require('../webpack.config.js')();
+  const compiler = webpack(config)
+
+  app.use(webpackHotMiddleware(compiler))
+  app.use(webpackDevMiddleware(compiler, {
+    noInfo: true,
+    publicPath: config.output.publicPathdist
+  }))
+}
+
+app.listen(port)
+console.log(`Listening at http://localhost:${port}`)
+```
+
+Run:
+```
+$ node dist/app.js
+```
+
+package.json update scripts
+```json
+"scripts": {
+  "start": "npm run build && node build/app.js",
+  "dev": "node src/app.js",
+  "start:old": "webpack-dev-server --env development",
+  "build": "webpack --env production",
+  "lint": "eslint . --ext .js --ext .jsx",
+  "test": "karma start karma.conf.js",
+  "test:watch": "npm run test -- --watch"
+}
+```
 
 ## Bundle Splitting
 
